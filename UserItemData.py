@@ -1,28 +1,27 @@
 import datetime
-import csv
 from MovieData import MovieData
 
 import numpy as np
 import pandas as pd
 
 class UserItemData:
-    def __init__(self, path, start_date = datetime.datetime.min, end_date = datetime.datetime.max, min_ratings = 0):
+    def __init__(self, path, start_date = pd.Timestamp.min, end_date = pd.Timestamp.max, min_ratings = 0):
         self.path = path
-        self.start_date = datetime.datetime.strptime(start_date, "%d.%m.%Y") if isinstance(start_date, str) else start_date
-        self.end_date = datetime.datetime.strptime(end_date, "%d.%m.%Y") if isinstance(end_date, str) else end_date
+        self.start_date = pd.to_datetime(start_date, dayfirst=True)
+        self.end_date = pd.to_datetime(end_date, dayfirst=True)
         self.min_ratings = min_ratings
-        self.user_ratings = []
-        self.movies = MovieData("data/movies.dat")
+        self.user_ratings = [] # ?
+        self.movies = MovieData("data/movies.dat") # ?
         self.load_data()
 
+
     def load_data(self):
-        with open(self.path) as file:
-            reader = csv.reader(file, delimiter="\t")
-            next(reader)
-            for row in reader:
-                rating_date = datetime.datetime(year=int(row[5]), month=int(row[4]), day=int(row[3]))
-                if self.start_date <= rating_date <= self.end_date and self.movies.get_nratings(int(row[1])) >= self.min_ratings:
-                    self.user_ratings.append(row)
+        frame = pd.read_csv(self.path, sep="\t", parse_dates={"date" : ["date_year", "date_month", "date_day"]})
+        #print(self.start_date,"this:", frame["date"])
+        frame_mask = (self.start_date <= frame["date"]) & (frame["date"] < self.end_date)
+        frame = frame[frame_mask]
+        print( frame.groupby("movieID").filter(lambda x : len(x) >= self.min_ratings) )
+
 
     def nratings(self):
         return len(self.user_ratings)

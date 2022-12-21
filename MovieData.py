@@ -2,6 +2,7 @@ import csv
 
 class MovieData:
     def __init__(self, path):
+        return
         self.path = path
         self.movies = {}
         self.load_data()
