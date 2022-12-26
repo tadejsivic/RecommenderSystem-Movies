@@ -18,7 +18,7 @@ class RandomPredictor(Predictor):
         self.frame["rec_rating"] = np.random.randint(self.min, self.max + 1, size=len(self.frame))
 
 
-    def predict(self, user_id):
+    def predict(self, user_id, n=-1):
         # The user_id is not needed here, since we randomize the same for everyone
         movie_rating = {}
         for movie_id, rec_rating in zip(self.frame["movieID"], self.frame["rec_rating"]):
