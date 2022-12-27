@@ -6,6 +6,11 @@ from MovieData import MovieData
 import numpy as np
 import pandas as pd
 
+# This thing takes way to long, but I wanted to make it dynamic
+# So it calculates the STD - Standard deviation of rating for each movie, then it sorts by the highest STD.
+# When called, it returns N movies with highest STD
+# Why does it take so long? Because we're using Python's core functionalities
+
 class STDPredictor(Predictor):
     def __init__(self, n):
         self.n = n
@@ -32,7 +37,7 @@ class STDPredictor(Predictor):
     def predict(self, user_id, num):
         max_stds = np.sort(np.unique(np.array(self.frame["std"])))[-num:]
         for i in range(len(self.frame)):
-            #self.frame.loc[self.frame["std"] not in max_stds, "rec_rating"] = -1
+            # If STD is not one of the N highest, set rec_rating to -1, that way it will ignore those
             if self.frame.iloc[i, 3] not in max_stds:
                 self.frame.iloc[i, 4] = -1
 
