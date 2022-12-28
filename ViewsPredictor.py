@@ -21,6 +21,9 @@ class ViewsPredictor(Predictor):
             
             self.frame.loc[self.frame["movieID"] == id, "rec_rating"] = len(temp_frame)
 
+    def predict(self, user_id, n):
+        return self.frame
+
 #p = ViewsPredictor()
 #p.fit(UserItemData("data/user_ratedmovies.dat"))
 #rint(p.frame)

@@ -20,10 +20,7 @@ class RandomPredictor(Predictor):
 
     def predict(self, user_id, n=-1):
         # The user_id is not needed here, since we randomize the same for everyone
-        movie_rating = {}
-        for movie_id, rec_rating in zip(self.frame["movieID"], self.frame["rec_rating"]):
-            movie_rating[movie_id] = rec_rating
-        return movie_rating
+        return self.frame
 
 
 #md = MovieData('data/movies.dat')

@@ -29,6 +29,9 @@ class AveragePredictor(Predictor):
             
             self.frame.loc[self.frame["movieID"] == id, "rec_rating"] = avg
 
+    def predict(self, user_id, n):
+        return self.frame
+
 #ap = AveragePredictor(0)
 #ap.fit(UserItemData("data/user_ratedmovies.dat"))
 

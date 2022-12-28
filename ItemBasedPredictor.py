@@ -8,6 +8,9 @@ from numpy import linalg
 import pandas as pd
 import math
 
+# This HAS to be run from Recommender using rec_seen=True, since this list actually returns movies the user has not yet seen.
+# Running with rec_seen=False would wipe out all data
+
 class ItemBasedPredictor(Predictor):
     def __init__(self, min_values = 0, threshold = 0):
         self.min_values = min_values
@@ -19,7 +22,6 @@ class ItemBasedPredictor(Predictor):
         self.frame["userID"] = X.user_ratings["userID"]
         self.frame["movieID"] = X.user_ratings["movieID"]
         self.frame["rating"] = X.user_ratings["rating"]
-        self.frame["rec_rating"] = 0
 
         self.similar_movies = {}
         unique_movies = self.frame["movieID"].unique()
@@ -58,21 +60,40 @@ class ItemBasedPredictor(Predictor):
                     self.similar_movies[(p1,p2)] = 0
                     continue
                 self.similar_movies[(p1,p2)] = sim
-                
+              
 
     def predict(self, user_id, num):
-        pass
-
+        users_average = np.array(self.frame.loc[self.frame["userID"] == user_id, "rating"]).mean()
+        user_rated_movies = self.frame.loc[self.frame["userID"] == user_id, "movieID"].tolist()
+        unique_movies = self.frame["movieID"].unique()
+        movies_to_recommend = [movie_id for movie_id in unique_movies if movie_id not in user_rated_movies]
+    
+        temp_frame = pd.DataFrame()
+        temp_frame["movieID"] = movies_to_recommend
+        temp_frame["userID"] = user_id
+        temp_frame["rec_rating"] = -1
+    
+        for movie_to_rate in temp_frame["movieID"]:
+            numerator = 0
+            sum_of_similarities = 0
+            for rated_movie in user_rated_movies:
+                numerator += self.similarity(movie_to_rate, rated_movie) * (
+                    self.frame.loc[(self.frame["userID"]==user_id) & (self.frame["movieID"]==rated_movie), "rating"].tolist()[0]
+                     - users_average
+                )
+                sum_of_similarities += self.similarity(movie_to_rate, rated_movie)
+            rec = users_average + numerator / sum_of_similarities
+            temp_frame.loc[temp_frame["movieID"]==movie_to_rate, "rec_rating"] = rec
+        return temp_frame
 
     def similarity(self, p1, p2):
         return self.similar_movies[(p1,p2)]
 
 
-ibp = ItemBasedPredictor()
-ibp.fit(UserItemData("data/user_ratedmovies.dat", min_ratings=1000))
-
-print(ibp.similarity(1580, 780))
-
+#ibp = ItemBasedPredictor()
+#ibp.fit(UserItemData("data/user_ratedmovies.dat", min_ratings=1000))
+#print(ibp.similarity(1036, 32))
+#ibp.predict(78, 15)
 
 
 

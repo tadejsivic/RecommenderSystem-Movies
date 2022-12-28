@@ -40,6 +40,7 @@ class STDPredictor(Predictor):
             # If STD is not one of the N highest, set rec_rating to -1, that way it will ignore those
             if self.frame.iloc[i, 3] not in max_stds:
                 self.frame.iloc[i, 4] = -1
+        return self.frame
 
 #stdp = STDPredictor(100)
 #stdp.fit(UserItemData("data/user_ratedmovies.dat"))
