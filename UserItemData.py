@@ -25,6 +25,6 @@ class UserItemData:
         return len(self.user_ratings)
 
 
-#ui_data = UserItemData("data/user_ratedmovies.dat", start_date = "12.1.2007", end_date="16.2.2008", min_ratings=100)
+#ui_data = UserItemData("data/user_ratedmovies.dat", min_ratings=100)
 #print(ui_data.nratings())
 #print(ui_data.movies.get_title(1))

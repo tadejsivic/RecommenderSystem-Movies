@@ -39,7 +39,7 @@ md = MovieData('data/movies.dat')
 uim = UserItemData('data/user_ratedmovies.dat', min_ratings=1000)
 rec = Recommender(ItemBasedPredictor())
 rec.fit(uim)
-rec_items = rec.recommend(78, n=15, rec_seen=True)
+rec_items = rec.recommend(1, n=10, rec_seen=True)
 for idmovie, val in rec_items:
     try:
         print("Film: {}, ocena: {}".format(md.get_title(idmovie), val))

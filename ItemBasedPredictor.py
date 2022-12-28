@@ -82,7 +82,12 @@ class ItemBasedPredictor(Predictor):
                      - users_average
                 )
                 sum_of_similarities += self.similarity(movie_to_rate, rated_movie)
-            rec = users_average + numerator / sum_of_similarities
+            print(users_average,"+",numerator,"/",sum_of_similarities)
+            if sum_of_similarities != 0: 
+                rec = users_average + numerator / sum_of_similarities
+            else:
+                rec = users_average
+            print(rec)
             temp_frame.loc[temp_frame["movieID"]==movie_to_rate, "rec_rating"] = rec
         return temp_frame
 
