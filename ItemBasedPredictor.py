@@ -82,24 +82,57 @@ class ItemBasedPredictor(Predictor):
                      - users_average
                 )
                 sum_of_similarities += self.similarity(movie_to_rate, rated_movie)
-            print(users_average,"+",numerator,"/",sum_of_similarities)
             if sum_of_similarities != 0: 
                 rec = users_average + numerator / sum_of_similarities
             else:
                 rec = users_average
-            print(rec)
             temp_frame.loc[temp_frame["movieID"]==movie_to_rate, "rec_rating"] = rec
         return temp_frame
 
     def similarity(self, p1, p2):
+        if p1==p2: return 0
         return self.similar_movies[(p1,p2)]
 
 
+    def print_most_similar_movies(self, movies:MovieData, num):
+        max_similarities = np.sort(list(self.similar_movies.values()))[-num:]
+        unique_movies = self.frame["movieID"].unique()
+        temp_frame = pd.DataFrame(columns = ["p1", "p2", "sim"])
+        for p1 in unique_movies:
+            for p2 in unique_movies:
+                if len(max_similarities) == 0: break
+                if self.similarity(p1,p2) in max_similarities:
+                    temp_frame = pd.concat([temp_frame, pd.DataFrame({"p1":[p1], "p2":[p2], "sim":[self.similarity(p1,p2)]})])
+                    max_similarities = max_similarities[max_similarities != np.array([self.similarity(p1,p2)])]
+    
+        temp_frame.sort_values("sim", ascending=False, inplace=True)
+        print("Top",num,"most similar movies:")
+        for i in range(len(temp_frame)):
+            p1, p2, sim = (temp_frame[["p1", "p2", "sim"]].iloc[i])
+            print("Film1: {}, Film2: {}, podobnost: {}".format(movies.get_title(p1), movies.get_title(p2), sim))
+            print("Film1: {}, Film2: {}, podobnost: {}".format(movies.get_title(p2), movies.get_title(p1), sim))
+            
+    
+    def similarItems(self, item, n):
+        max_similarities = []
+        unique_movies = self.frame["movieID"].unique()
+        temp_frame = pd.DataFrame(columns = ["movieID", "sim"])
+        for similar_movie in unique_movies:
+            max_similarities.append(self.similarity(item, similar_movie))
+        max_similarities = np.sort(max_similarities)[-n:]
+        
+        for similar_movie in unique_movies:
+            if self.similarity(item, similar_movie) in max_similarities:
+                temp_frame = pd.concat([temp_frame, pd.DataFrame({"movieID":[similar_movie], "sim":[self.similarity(item,similar_movie)]})])
+        return temp_frame
+
+
+
 #ibp = ItemBasedPredictor()
-#ibp.fit(UserItemData("data/user_ratedmovies.dat", min_ratings=1000))
+#ibp.fit(UserItemData("data/user_ratedmovies.dat", min_ratings=1000)) # 1000
 #print(ibp.similarity(1036, 32))
 #ibp.predict(78, 15)
-
+#ibp.print_most_similar_movies(MovieData("data/movies.dat"), 20)
 
 
 

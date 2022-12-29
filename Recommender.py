@@ -35,13 +35,34 @@ class Recommender:
         return result
 
 
+    def recommend_similar_items(self, movie_id, num):
+        predicted_frame = self.predictor.similarItems(movie_id, num)
+        predicted_frame.sort_values("sim", ascending=False, inplace=True)
+        result = []
+        for i in range(len(predicted_frame)):
+            movie_id, sim = (predicted_frame[["movieID", "sim"]].iloc[i])
+            if (movie_id, sim) not in result:
+                result.append((movie_id, sim))
+        return result
+
+
+
 md = MovieData('data/movies.dat')
 uim = UserItemData('data/user_ratedmovies.dat', min_ratings=1000)
-rec = Recommender(ItemBasedPredictor())
+pred = ItemBasedPredictor()
+rec = Recommender(pred)
 rec.fit(uim)
-rec_items = rec.recommend(1, n=10, rec_seen=True)
+#rec_items = rec.recommend(1, n=10, rec_seen=True)
+#for idmovie, val in rec_items:
+#    try:
+#        print("Film: {}, ocena: {}".format(md.get_title(idmovie), val))
+#    except Exception:
+#        print("Movie does not have any ratings")
+#pred.print_most_similar_movies(md, 20)
+
+rec_items = rec.recommend_similar_items(4993, 10)
+print('Filmi podobni "The Lord of the Rings: The Fellowship of the Ring": ')
 for idmovie, val in rec_items:
-    try:
-        print("Film: {}, ocena: {}".format(md.get_title(idmovie), val))
-    except Exception:
-        print("Movie does not have any ratings")
+    print("Film: {}, ocena: {}".format(md.get_title(idmovie), val))
+
+
