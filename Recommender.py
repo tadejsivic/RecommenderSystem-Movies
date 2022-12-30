@@ -29,6 +29,8 @@ class Recommender:
         i=0
         while len(result) < n and i < len(predicted_frame):
             movie_id, rec_rating = (predicted_frame[["movieID", "rec_rating"]].iloc[i])
+            if rec_rating > 5: rec_rating = 5
+            if rec_rating < 1: rec_rating = 1
             if (movie_id, rec_rating) not in result:
                 result.append((movie_id,rec_rating))
             i += 1
