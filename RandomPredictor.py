@@ -20,6 +20,7 @@ class RandomPredictor(Predictor):
 
     def predict(self, user_id, n=-1):
         # The user_id is not needed here, since we randomize the same for everyone
+        self.frame["userID"] = user_id
         return self.frame
 
 

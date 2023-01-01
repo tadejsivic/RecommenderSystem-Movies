@@ -11,6 +11,8 @@ import pandas as pd
 # When called, it returns N movies with highest STD
 # Why does it take so long? Because we're using Python's core functionalities
 
+# DO NOT TRY TO EVALUATE IT. PLEASE.
+
 class STDPredictor(Predictor):
     def __init__(self, n):
         self.n = n

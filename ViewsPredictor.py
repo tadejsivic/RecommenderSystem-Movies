@@ -22,6 +22,7 @@ class ViewsPredictor(Predictor):
             self.frame.loc[self.frame["movieID"] == id, "rec_rating"] = len(temp_frame)
 
     def predict(self, user_id, n):
+        self.frame["userID"]=user_id
         return self.frame
 
 #p = ViewsPredictor()

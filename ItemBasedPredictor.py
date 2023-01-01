@@ -62,7 +62,9 @@ class ItemBasedPredictor(Predictor):
               
 
     def predict(self, user_id, num):
-        users_average = np.array(self.frame.loc[self.frame["userID"] == user_id, "rating"]).mean()
+        users_average = np.array(self.frame.loc[self.frame["userID"] == user_id, "rating"])
+        if len(users_average) == 0: return pd.DataFrame()
+        users_average = users_average.mean()
         user_rated_movies = self.frame.loc[self.frame["userID"] == user_id, "movieID"].tolist()
         unique_movies = self.frame["movieID"].unique()
         movies_to_recommend = [movie_id for movie_id in unique_movies if movie_id not in user_rated_movies]
