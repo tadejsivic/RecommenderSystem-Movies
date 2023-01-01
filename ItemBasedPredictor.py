@@ -6,7 +6,6 @@ from MovieData import MovieData
 import numpy as np
 from numpy import linalg
 import pandas as pd
-import math
 
 # This HAS to be run from Recommender using rec_seen=True, since this list actually returns movies the user has not yet seen.
 # Running with rec_seen=False would wipe out all data
