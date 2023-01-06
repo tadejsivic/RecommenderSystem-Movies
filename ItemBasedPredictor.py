@@ -7,8 +7,11 @@ import numpy as np
 from numpy import linalg
 import pandas as pd
 
-# This HAS to be run from Recommender using rec_seen=True, since this list actually returns movies the user has not yet seen.
-# Running with rec_seen=False would wipe out all data
+# Prediktor, ki napove podobne filme, katere uporabnik še ni gledal.
+# Podobnost filmov je izračuna s popravljeno kosinusno razdaljo.
+# Poleg tega ima še dodatne metode za izpis najbolj podobnih filmov in najbolj podobnih filmov izbranemu
+
+# Zagnati z rec_seen=True
 
 class ItemBasedPredictor(Predictor):
     def __init__(self, min_values = 0, threshold = 0):

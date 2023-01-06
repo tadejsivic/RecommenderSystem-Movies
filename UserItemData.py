@@ -4,13 +4,15 @@ from MovieData import MovieData
 import numpy as np
 import pandas as pd
 
+# Razred, ki prebere podatke iz datoteke
+# Glavni razred za pridobitev podatkov, uporabljen v vseh ostalih
+
 class UserItemData:
     def __init__(self, path, start_date = pd.Timestamp.min, end_date = pd.Timestamp.max, min_ratings = 0):
         self.path = path
         self.start_date = pd.to_datetime(start_date, dayfirst=True)
         self.end_date = pd.to_datetime(end_date, dayfirst=True)
         self.min_ratings = min_ratings
-        #self.movies = MovieData("data/movies.dat")
         self.load_data()
 
 

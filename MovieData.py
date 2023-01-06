@@ -2,6 +2,8 @@ import csv
 import numpy as np
 import pandas as pd
 
+# Razred uporabljen za preslikavo id filma v njegov naslov
+
 class MovieData:
     def __init__(self, path):
         self.path = path

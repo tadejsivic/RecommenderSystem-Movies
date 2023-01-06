@@ -6,9 +6,11 @@ from MovieData import MovieData
 import numpy as np
 import pandas as pd
 
-# Just like ItemBasedPredictor, this class return a dataframe consisting of all recommended ratings for movies the user has not seen
-# So it has to be run from Recommender using "rec_seen=True"
-# Running with rec_seen=False would return nothing
+# Prediktor, ki napove filme, ki jih uporabnik še ni gledal
+# Za merjenje podobnosti se uporabijo trojčki, oz. metoda Slope One
+# To pomeni, koliko bi uporabnik ocenil film, glede na njegovo povprečje in kako se filmi ocenjejujo povprečno med seboj
+
+# Zagnati z rec_seen=True
 
 class SlopeOnePredictor(Predictor):
 

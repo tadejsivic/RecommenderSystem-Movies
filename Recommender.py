@@ -13,6 +13,13 @@ import pandas as pd
 import numpy as np
 import math
 
+# Glavni razred, ki sprejme prediktor, napove filme, ter jih vrne urejene
+# Narejen je, da deluje za katerikoli prediktor
+# Glavna tukaj sta ItemBased in SlopeOne
+# Ima tudi evaluacijo, ki za prediktor izračuna MAE, RMSE, Precision, Recall in F1 metrike
+# Pozor: evaluacija traja nekje do 2 minuti
+
+
 class Recommender:
     def __init__(self, predictor:Predictor):
         self.predictor = predictor
@@ -63,13 +70,11 @@ class Recommender:
         unique_movies = test_frame["movieID"].unique()
 
         for user_id in unique_users:
-            #print("USER:",user_id)
             predicted_frame = self.predictor.predict(user_id, num)
             if len(predicted_frame) == 0: 
                 continue
             recommended_movies = predicted_frame[predicted_frame["userID"] == user_id]
             rated_movies = test_frame[test_frame["userID"]==user_id]
-            #print(rated_movies)
             matching_movies = np.intersect1d( recommended_movies["movieID"].unique(), rated_movies["movieID"].unique() )
             if len(matching_movies) == 0: # No recommended movies were rated
                 continue
@@ -83,7 +88,6 @@ class Recommender:
             for comparing_movie in matching_movies:
                 rec_rating = list(recommended_movies.loc[recommended_movies["movieID"]==comparing_movie, "rec_rating"])[0]
                 actual_rating = list(rated_movies.loc[rated_movies["movieID"]==comparing_movie, "rating"])[0]
-                #print("Recommended:",rec_rating," Actual:",actual_rating)
                 mae_sum += abs(actual_rating - rec_rating)
                 rmse_sum += (actual_rating - rec_rating)**2
                 num_of_calculations += 1
@@ -102,7 +106,7 @@ class Recommender:
 
 md = MovieData('data/movies.dat')
 uim = UserItemData('data/user_ratedmovies.dat', min_ratings=1000, end_date='1.1.2008')
-pred = SlopeOnePredictor()
+pred = SlopeOnePredictor() # <-- Prediktor
 rec = Recommender(pred)
 rec.fit(uim)
 
@@ -113,6 +117,7 @@ for idmovie, val in rec_items:
     except Exception:
         print("Movie does not have any ratings")
 
+# Izpis najbolj podobnih filmov
 #pred.print_most_similar_movies(md, 20)
 # SIMILAR ITEMS TO THIS
 #rec_items = rec.recommend_similar_items(4993, 10)
@@ -120,6 +125,8 @@ for idmovie, val in rec_items:
 #for idmovie, val in rec_items:
 #    print("Film: {}, ocena: {}".format(md.get_title(idmovie), val))
 
+
+# Evaluacija
 uim_test = UserItemData('data/user_ratedmovies.dat', min_ratings=200, start_date='2.1.2008')
 rmse, mae, precision, recall, f = rec.evaluate(uim_test, 20)
 print("Evaluation:")

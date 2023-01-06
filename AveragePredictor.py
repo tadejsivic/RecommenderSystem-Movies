@@ -4,6 +4,9 @@ from UserItemData import UserItemData
 import numpy as np
 import pandas as pd
 
+# Average predictor priredi ocene filmom s formulo za popravljeno povprečje
+# Uporabi se v recommenderju
+
 class AveragePredictor(Predictor):
     def __init__(self, b):
         self.b = b
@@ -33,6 +36,4 @@ class AveragePredictor(Predictor):
         self.frame["userID"]=user_id
         return self.frame
 
-#ap = AveragePredictor(0)
-#ap.fit(UserItemData("data/user_ratedmovies.dat"))
 

@@ -6,12 +6,12 @@ from MovieData import MovieData
 import numpy as np
 import pandas as pd
 
-# This thing takes way to long, but I wanted to make it dynamic
-# So it calculates the STD - Standard deviation of rating for each movie, then it sorts by the highest STD.
-# When called, it returns N movies with highest STD
-# Why does it take so long? Because we're using Python's core functionalities
+# Prediktor, ki upošteva tudi standardne deviacije ocen filmov, da določi kontroverzne filme
+# Vsem filmom določi standardni odklon ter jih sortira po tem
+# Take filme namreč ne želimo priporočati širši javnosti, oz rpi nepersonaliziranem
+# Če so priporočila personalizirana, potem jih lahko
 
-# DO NOT TRY TO EVALUATE IT. PLEASE.
+# Ta razred traja dolgo, in se ga ne sme evaluirati, saj ne priporoča filmov, le izpiše kontroverzne - pa še traja predolgo
 
 class STDPredictor(Predictor):
     def __init__(self, n):
@@ -44,7 +44,3 @@ class STDPredictor(Predictor):
                 self.frame.iloc[i, 4] = -1
         return self.frame
 
-#stdp = STDPredictor(100)
-#stdp.fit(UserItemData("data/user_ratedmovies.dat"))
-#stdp.predict(78, 5)
-#print(stdp.frame)

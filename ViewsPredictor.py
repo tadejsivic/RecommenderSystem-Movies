@@ -5,8 +5,11 @@ from MovieData import MovieData
 import numpy as np
 import pandas as pd
 
+# Najbolj popularen prediktor, predlaga najbolj gledane filme.
+# Tega se ne sme evaluirati, saj ne vrača ocen filmov, temveč števila ogledov (kot je v navodilih)
+
 class ViewsPredictor(Predictor):
-    # Constructor not needed. Not even "predict". This class simply counts the number of views
+    
     def fit(self, X:UserItemData):
         self.frame = pd.DataFrame()
         self.frame["userID"] = X.user_ratings["userID"]
@@ -25,7 +28,5 @@ class ViewsPredictor(Predictor):
         self.frame["userID"]=user_id
         return self.frame
 
-#p = ViewsPredictor()
-#p.fit(UserItemData("data/user_ratedmovies.dat"))
-#rint(p.frame)
+
 
